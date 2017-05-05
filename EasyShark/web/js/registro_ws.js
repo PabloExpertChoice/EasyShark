@@ -103,12 +103,13 @@ $(function () {
     });
     //codigo de usuario comun
     $('#btnRegistrarUsuComun').click(function () {
-        console.log($('#txtNomUsuarioComun').val());
         var nombre = $('#txtNomUsuarioComun').val();
         var apellidoPaterno = $('#txtApeUsuarioComun').val();
         var apellidoMaterno = $('#txtAmaUsuarioComun').val();
         var email = $('#txtEmailCorporativoComun').val();
         var email2 = $('#txtEmailCorporativo2Comun').val();
+        var status = $('#selectSTATUS').val();
+        var perfil = $('#selectPERFIL').val();
         var usuAdmin = $('#usuAdmin').val();
         var regex = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
 
@@ -144,6 +145,8 @@ $(function () {
                     apellidoPaterno: apellidoPaterno,
                     apellidoMaterno: apellidoMaterno,
                     email: email,
+                    status: status,
+                    perfil: perfil,
                     usuAdmin: usuAdmin
                 }, beforeSend: function (xhr) {
                     $('#btnRegistrarUsuComun').prop('disabled', true);
@@ -152,19 +155,84 @@ $(function () {
                     $('#btnRegistrarUsuComun').prop('disabled', false);
                     $('#btnRegistrarUsuComun').html('Registrar');
 
-                    if (data.estado == 200) {
-                        go('Svl_Usuarios', [{id: 'accion', val: 'respuesta-crear-empresa'}, {id: 'msgTipo', val: '1'}], undefined, 'Svl_Usuarios');
+                    if (data.estado == 100) {
+                        //aqui va codigo para refrescar la lista de usuarios
+                        go('cmd', [{id: 'code', val: 'usuario'}], undefined, 'cmd');
                     } else {
                         $('#modalError').modal({backdrop: 'static'});
                         $('#msgError').html(data.descripcion);
                     }
                 }
             });
-
         }
     });
 
+    //codigo editar usuario comun
+    $('#btnEditarUsuComun').click(function () {
+        var id = $('#idUsuarioComun').val();
+        var nombre = $('#txtEditarNomUsuarioComun').val();
+        var apellidoPaterno = $('#txtEditarApeUsuarioComun').val();
+        var apellidoMaterno = $('#txtEditarAmaUsuarioComun').val();
+        var email = $('#txtEditarEmailCorporativoComun').val();
+        var email2 = $('#txtEditarEmailCorporativo2Comun').val();
+        var status = $('#selectEditarSTATUS').val();
+        var regex = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
+
+        if (nombre.length === 0) {
+            $('#modalError').modal({backdrop: 'static'});
+            $('#msgError').html('Debe ingresar un nombre.');
+        } else if (apellidoPaterno.length === 0) {
+            $('#modalError').modal({backdrop: 'static'});
+            $('#msgError').html('Debe ingresar un apellido paterno.');
+        } else if (apellidoMaterno.length === 0) {
+            $('#modalError').modal({backdrop: 'static'});
+            $('#msgError').html('Debe ingresar un apellido materno.');
+        } else if (email.length === 0) {
+            $('#modalError').modal({backdrop: 'static'});
+            $('#msgError').html('Debe ingresar un correo corporativo.');
+        } else if (email2.length === 0) {
+            $('#modalError').modal({backdrop: 'static'});
+            $('#msgError').html('Debe repetir un correo corporativo.');
+        } else if (email != email2) {
+            $('#modalError').modal({backdrop: 'static'});
+            $('#msgError').html('Los correos no coinciden');
+        } else if (!regex.test($('#txtEditarEmailCorporativoComun').val().trim())) {
+            $('#modalError').modal({backdrop: 'static'});
+            $('#msgError').html('El correo ingresado no es válido.');
+        } else {
+            $.ajax({
+                url: 'Svl_Usuarios',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    accion: 'editar-usuario-comun',
+                    id: id,
+                    nombre: nombre,
+                    apellidoPaterno: apellidoPaterno,
+                    apellidoMaterno: apellidoMaterno,
+                    email: email,
+                    status: status,
+                }, beforeSend: function (xhr) {
+                    $('#btnRegistrarUsuComun').prop('disabled', true);
+                    $('#btnRegistrarUsuComun').html('Registrando... <i class="fa fa-spinner fa-spin"></i>');
+                }, success: function (data, textStatus, jqXHR) {
+                    $('#btnRegistrarUsuComun').prop('disabled', false);
+                    $('#btnRegistrarUsuComun').html('Registrar');
+
+                    if (data.estado == 100) {
+                        //aqui va codigo para refrescar la lista de usuarios
+                        go('cmd', [{id: 'code', val: 'usuario'}], undefined, 'cmd');
+                    } else {
+                        $('#modalError').modal({backdrop: 'static'});
+                        $('#msgError').html(data.descripcion);
+                    }
+                }
+            });
+        }
+    });
 });
+
+
 
 function verTerminos() {
     $('#modalTerminos').modal({backdrop: 'static'});

@@ -19,6 +19,7 @@ public class bnsLogin {
         ResultSet rs = null;
         Usuario usuario = null;
         try {
+            
             String sql = "SELECT USU.id, USU.nomb, USU.apellpat, USU.apellmat, USU.email,\n"
                     + "EMP.id, EMP.nombre, EMP.rut, \n"
                     + "ESTADO.id, ESTADO.nomb,\n"

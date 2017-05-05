@@ -43,10 +43,6 @@ public class slv_login extends HttpServlet {
                     Usuario usuario = bsn.iniciarSesion(user, ENCR.toMD5(clave));
                     JSONObject json = new JSONObject();
                     if (usuario != null) {
-                        if (usuario.getEstado().getId() == 5) {
-                            session.setAttribute(D.SESSION_USUARIO, usuario);
-                            json.put("code", "Pendiente");
-                        }
                         session.setAttribute(D.SESSION_USUARIO, usuario);
                         json.put("estado", D.EST_OK);
                     } else {

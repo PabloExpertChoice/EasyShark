@@ -7,11 +7,11 @@ import cl.expertchoice.clases.Subsidiary;
 import cl.expertchoice.clases.Usuario;
 import soporte.D;
 import com.mysql.jdbc.Statement;
-import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -447,6 +447,131 @@ public class BnUsuario {
         }
 
         return flag;
+    }
+
+    //Listar todo los usuarios que tiene el administrador
+    public ArrayList<Usuario> ListaUsuariosComunes(int idSubsidiaryAdmin) throws SQLException {
+        Connection conn = null;
+        conn = Conexion.getConexionEasy();
+
+        String sql = "SELECT id, nomb, apellpat, apellmat, email, status_id, perfil_id FROM " + D.ESQUEMA + ".USER WHERE subsidiary_id = ?;";
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setInt(1, idSubsidiaryAdmin);
+        ResultSet rs = pst.executeQuery();
+
+        ArrayList<Usuario> lista = new ArrayList<Usuario>();
+        while (rs.next()) {
+            Usuario usu = new Usuario();
+            Status estado = new Status();
+            Perfil perfil = new Perfil();
+            usu.setId(rs.getInt("id"));
+            usu.setNombre(rs.getString("nomb"));
+            usu.setApePaterno(rs.getString("apellpat"));
+            usu.setApeMaterno(rs.getString("apellmat"));
+            usu.setEmail(rs.getString("email"));
+
+            //obtener estado
+            BnStatus BnSta = new BnStatus();
+            estado = BnSta.buscarPorId(rs.getInt("status_id"));
+            usu.setEstado(estado);
+
+            //obtener perfil
+            BnPerfil Bnper = new BnPerfil();
+            perfil = Bnper.buscarPorId(rs.getInt("perfil_id"));
+            usu.setPerfil(perfil);
+            lista.add(usu);
+        }
+        pst.close();
+        Conexion.Desconectar(conn);
+        return lista;
+    }
+
+    //cambiar estado a bloqueado
+    public void Bloquear(int Idusu) {
+        Connection conn = null;
+        try {
+            conn = Conexion.getConexionEasy();
+            String sql = "UPDATE " + D.ESQUEMA + ".USER SET status_id=3 WHERE id=?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, Idusu);
+            pst.executeUpdate();
+            pst.close();
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            Conexion.Desconectar(conn);
+        }
+    }
+    //cambiar estado a activo
+    public void desBloquear(int Idusu) {
+        Connection conn = null;
+        try {
+            conn = Conexion.getConexionEasy();
+            String sql = "UPDATE " + D.ESQUEMA + ".USER SET status_id=2 WHERE id=?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, Idusu);
+            pst.executeUpdate();
+            pst.close();
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            Conexion.Desconectar(conn);
+        }
+    }
+    //ver si el perfil es 2 = administrador
+    public boolean EsAdmin(int Idusu) {
+        Connection conn = null;
+        Usuario UsuBuscado = new Usuario();
+        Perfil perfil = new Perfil();
+        try {
+            conn = Conexion.getConexionEasy();
+            String sql = "SELECT perfil_id \n"
+                    + "FROM " + D.ESQUEMA + ".USER \n"
+                    + "WHERE id = ? ";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, Idusu);
+            ResultSet rs = pst.executeQuery();
+            //obtener perfil
+            BnPerfil Bnper = new BnPerfil();
+            while (rs.next()) {
+            perfil = Bnper.buscarPorId(rs.getInt("perfil_id"));
+            UsuBuscado.setPerfil(perfil);
+            }
+            if (UsuBuscado.getPerfil().getId() == 2) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            Conexion.Desconectar(conn);
+        }
+        return false;
+    }
+    //Editar Usuario
+    public void editarUsuario(Usuario usu) {
+        Connection conn = null;
+        try {
+            conn = Conexion.getConexionEasy();
+            String sql = "UPDATE " + D.ESQUEMA + ".USER SET nomb=?, apellpat=?,"
+                    + " apellmat=?, email=? " 
+                    + "WHERE id=?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, usu.getNombre());
+            pst.setString(2, usu.getApePaterno());
+            pst.setString(3, usu.getApeMaterno());
+            pst.setString(4, usu.getEmail());
+            //pst.setInt(5, usu.getEstado().getId());
+            pst.setInt(5, usu.getId());
+            pst.executeUpdate();
+            pst.close();
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            Conexion.Desconectar(conn);
+        }
     }
 
 }

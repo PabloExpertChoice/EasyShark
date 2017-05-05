@@ -57,8 +57,7 @@ public class BnEmail {
             msgBody += "<p style='font-family: Calibri;'>Usuario Registrado .</p>";
             msgBody += "<p>su contraseña temporal es la siguiente.<br />";
             msgBody += "<p>"+clave+"<br />";
-            msgBody += "<p>Cuando se logee por primera vez se le pedira cambiar la contraseña .<br />";
-            msgBody += "<p>una vez lo haga podra usar el programa .<br />";
+            msgBody += "<p>Puede cambiarla cuando quiera .<br />";
             String mail = cx.getMail(msgBody);
             boolean sendEmail;
             sendEmail = MailUtil.sendEmailT(Correo, "Registro de Usuario", mail, Config_mail.MAIL_USER_INFO, Config_mail.MAIL_PASS_INFO);

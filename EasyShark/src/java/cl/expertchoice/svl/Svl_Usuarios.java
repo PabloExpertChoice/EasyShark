@@ -1,16 +1,19 @@
 package cl.expertchoice.svl;
 
 import cl.expertchoice.beans.BnEmail;
+import cl.expertchoice.beans.BnPerfil;
+import cl.expertchoice.beans.BnStatus;
 import cl.expertchoice.beans.BnSubsidiary;
 import cl.expertchoice.beans.BnUsuario;
 import cl.expertchoice.clases.Perfil;
 import cl.expertchoice.clases.Status;
 import cl.expertchoice.clases.Subsidiary;
 import cl.expertchoice.clases.Usuario;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -87,7 +90,7 @@ public class Svl_Usuarios extends HttpServlet {
                                 //se agrega la subsidiaria al usuario
                                 usu.setSubsidiary(nuevaEmpresa);
                                 BnSubsidiary bnSub = new BnSubsidiary();
-                                
+
                                 //se usa crearEmpresa para ingresar a la bbdd los datos y enviar el correo
                                 bnSub.crearEmpresa(nuevaEmpresa, usu);
                                 json.addProperty("estado", D.EST_OK);
@@ -119,10 +122,111 @@ public class Svl_Usuarios extends HttpServlet {
                         toPage("/easy_registro_ws_respuesta.jsp", request, response); //, this
                         break;
                     }
+                    case "ListaEstado": {
+                        BnStatus bnSta = new BnStatus();
+                        ArrayList<Status> list = bnSta.ListaEstados();
+                        String json2 = new Gson().toJson(list);
+                        System.out.println(json2);
+                        response.getWriter().print(json2);
+                        break;
+
+                    }
+                    case "ListaPerfil": {
+                        BnPerfil bnPerfil = new BnPerfil();
+                        ArrayList<Perfil> list = bnPerfil.ListaPerfil();
+                        String json3 = new Gson().toJson(list);
+                        System.out.println(json3);
+                        response.getWriter().print(json3);
+                        break;
+
+                    }
+                    case "ListarUsuarios": {
+                        //Parametros del Administrador
+                        HttpSession sesion = request.getSession(false);
+                        Usuario usuLogin = (Usuario) sesion.getAttribute(D.SESSION_USUARIO);
+
+                        BnUsuario bnUsu = new BnUsuario();
+                        ArrayList<Usuario> list = bnUsu.ListaUsuariosComunes(usuLogin.getSubsidiary().getId());
+                        String json4 = new Gson().toJson(list);
+                        System.out.println(json4);
+                        response.getWriter().print(json4);
+                        break;
+
+                    }
 
                     case "respuesta-cambio-password-error": {
                         request.setAttribute("msgTipo", "4");
                         toPage("/easy_registro_ws_respuesta.jsp", request, response); //, this
+                        break;
+                    }
+                    //bloquear usuario
+                    case "Bloquear": {
+                        json = new JsonObject();
+                        //Id del usuario a Bloquear
+                        int idusu = Integer.parseInt(request.getParameter("id"));
+                        BnUsuario bnUsu = new BnUsuario();
+                        //bloqueo el usuario
+                        if (bnUsu.EsAdmin(idusu)==false) {
+                            bnUsu.Bloquear(idusu);
+                            json.addProperty("estado", D.EST_USUARIO_COMUN_OK);
+                        } else {
+                            json.addProperty("estado", D.EST_EsADMINISTRADOR);
+                            json.addProperty("descripcion", "No puede bloquear un usuario administrador");
+                        }
+                        response.getWriter().println(json);
+                        break;
+                    }
+                    //editar usuario
+                    case "editar-usuario-comun": {
+                        json = new JsonObject();
+                        //obtener usuario Actual
+                        int idusu = Integer.parseInt(request.getParameter("id"));
+                        BnUsuario bnUsu = new BnUsuario();
+                        Usuario usuActual = bnUsu.obtener(idusu);
+                        //setiar Usuario
+                        Usuario usuarioEditado = new Usuario();
+                        usuarioEditado.setId(Integer.parseInt(request.getParameter("id")));
+                        usuarioEditado.setNombre(request.getParameter("nombre"));
+                        usuarioEditado.setApePaterno(request.getParameter("apellidoPaterno"));
+                        usuarioEditado.setApeMaterno(request.getParameter("apellidoMaterno"));
+                        usuarioEditado.setEmail(request.getParameter("email"));
+                        
+                        //DE MOMENTO NO SE EDITA ESTADO
+                        
+                        //verificar si el correo es el mismo y mantenerlo
+                        if(usuActual.getEmail().equalsIgnoreCase(usuarioEditado.getEmail())){
+                            //edita
+                            bnUsu.editarUsuario(usuarioEditado);
+                            json.addProperty("estado", D.EST_USUARIO_COMUN_OK);
+                            json.addProperty("descripcion", "Usuario Agregado");
+                        //si no es el mismo verifica si ya esta ingresado
+                        }else if (bnUsu.buscarPorCorreo(usuarioEditado.getEmail()) != null) {
+                            json.addProperty("estado", D.EST_NORESULTADO);
+                            json.addProperty("descripcion", "El correo <b>" + usuarioEditado.getEmail() + "</b> ya se encuentra registrado.");
+                        //si no es el mismo y no esta ingresado edita
+                        } else {
+                            bnUsu.editarUsuario(usuarioEditado);
+                            json.addProperty("estado", D.EST_USUARIO_COMUN_OK);
+                            json.addProperty("descripcion", "Usuario Agregado");
+                        }
+                        response.getWriter().println(json);
+                        break;
+                    }
+                    //desbloquear usuario
+                    case "desBloquear": {
+                        json = new JsonObject();
+                        //Id del usuario a desBloquear
+                        int idusu = Integer.parseInt(request.getParameter("id"));
+                        BnUsuario bnUsu = new BnUsuario();
+                        //desbloqueo el usuario
+                        if (bnUsu.EsAdmin(idusu)==false) {
+                            bnUsu.desBloquear(idusu);
+                            json.addProperty("estado", D.EST_USUARIO_COMUN_OK);
+                        } else {
+                            json.addProperty("estado", D.EST_EsADMINISTRADOR);
+                            json.addProperty("descripcion", "No puede desbloquear un usuario administrador");
+                        }
+                        response.getWriter().println(json);
                         break;
                     }
                     //codigo para usuario comun
@@ -134,7 +238,9 @@ public class Svl_Usuarios extends HttpServlet {
                         String apellidoPaterno = request.getParameter("apellidoPaterno");
                         String apellidoMaterno = request.getParameter("apellidoMaterno");
                         String email = request.getParameter("email");
-                        
+                        int idStatus = Integer.parseInt(request.getParameter("status"));
+                        int idPerfil = Integer.parseInt(request.getParameter("perfil"));
+
                         //Parametros del Administrador
                         HttpSession sesion = request.getSession(false);
                         Usuario usuLogin = (Usuario) sesion.getAttribute(D.SESSION_USUARIO);
@@ -153,10 +259,12 @@ public class Svl_Usuarios extends HttpServlet {
                             json.addProperty("descripcion", "El correo <b>" + email + "</b> ya se encuentra registrado.");
                         } else {
                             //estado = creado
-                            Status estado = new Status(1, null, null);
+                            BnStatus BnSta = new BnStatus();
+                            Status estado = BnSta.buscarPorId(idStatus);
                             usu.setEstado(estado);
                             //perfil = analista, usuario comun
-                            Perfil per = new Perfil(3, "");
+                            BnPerfil BnPer = new BnPerfil();
+                            Perfil per = BnPer.buscarPorId(idPerfil);
                             usu.setPerfil(per);
                             //creo la contraseña temporal
                             String claveTemporal = D.getPassword();
@@ -171,7 +279,7 @@ public class Svl_Usuarios extends HttpServlet {
                             //envio el correo con la clave sin encriptar 
                             correo.sendMailUsuarioComun(usu.getEmail(), claveTemporal);
 
-                            json.addProperty("estado", D.EST_OK);
+                            json.addProperty("estado", D.EST_USUARIO_COMUN_OK);
                             json.addProperty("descripcion", "Usuario Agregado");
                         }
 

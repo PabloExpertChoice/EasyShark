@@ -15,8 +15,10 @@ public class D {
     public static String DOMINIO = "localhost:8084/EasyShark";
     //Estados de respuesta ajax
     public static final int EST_OK = 200;
-    //estado del usuario comun
-    public static final int EST_PENDIENTE = 100;
+    //estado del usuario comun sirve para actualizar la lista de usuarios
+    public static final int EST_USUARIO_COMUN_OK = 100;
+    //para verificar si es un administrador
+    public static final int EST_EsADMINISTRADOR = 50;
     public static final int EST_ERROR = 404;
     public static final int EST_NORESULTADO = 405;
 
