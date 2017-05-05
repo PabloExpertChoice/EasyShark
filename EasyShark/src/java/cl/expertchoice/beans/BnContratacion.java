@@ -10,27 +10,27 @@ import java.util.ArrayList;
 
 public class BnContratacion {
 
-    public ArrayList<Contratacion> getContrataciones(int rut) throws SQLException {
+    public ArrayList<Contratacion> getContrataciones(int id_empresa) throws SQLException {
 
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         String sql = "SELECT ID_CONTRATACION, ID_TIPOCONTRATACION, "
-                + "ID_USUARIO, FECHA_ACEPTACION, FECHA_MODIFICACION, ESTADO\n"
-                + "FROM easy.LC_CONTRATACION WHERE ID_USUARIO = ?;";
+                + "ID_EMPRESA, FECHA_ACEPTACION, FECHA_MODIFICACION, ESTADO\n"
+                + "FROM easy.LC_CONTRATACION WHERE ID_EMPRESA = ?;";
         conn = Conexion.getConexionEasy();
         pst = conn.prepareStatement(sql);
 
-        pst.setInt(1, rut);
+        pst.setInt(1, id_empresa);
         rs = pst.executeQuery();
         ArrayList<Contratacion> lista = new ArrayList<Contratacion>();
         while (rs.next()) {
             Contratacion cont = new Contratacion();
             cont.setId_contratacion(rs.getLong("ID_CONTRATACION"));
             cont.setId_tipocontratacion(rs.getLong("ID_TIPOCONTRATACION"));
-            cont.setId_usuario(rs.getLong("ID_USUARIO"));
-            cont.setFecha_aceptacion(rs.getDate("FECHA_ACEPTACION"));
-            cont.setFecha_modificacion(rs.getDate("FECHA_MODIFICACION"));
+            cont.setId_usuario(rs.getLong("ID_EMPRESA"));
+            cont.setFecha_aceptacion(null);
+            cont.setFecha_modificacion(null);
             cont.setEstado(rs.getInt("ESTADO"));
             lista.add(cont);
         }
@@ -39,18 +39,18 @@ public class BnContratacion {
         return lista;
     }
 
-    public Boolean updateContrataciones(int rut, int id_tipocontratacion, int estado) throws SQLException {
+    public Boolean updateContrataciones(int id_empresa, int id_tipocontratacion, int estado) throws SQLException {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         String sql = "UPDATE easy.LC_CONTRATACION SET FECHA_MODIFICACION=CURRENT_TIMESTAMP, ESTADO=? \n"
-                + "WHERE ID_TIPOCONTRATACION=? AND ID_USUARIO=?;";
+                + "WHERE ID_TIPOCONTRATACION=? AND ID_EMPRESA=?;";
         conn = Conexion.getConexionEasy();
         pst = conn.prepareStatement(sql);
 
         pst.setInt(1, estado);
         pst.setInt(2, id_tipocontratacion);
-        pst.setInt(3, rut);
+        pst.setInt(3, id_empresa);
         Boolean flag = false;
         if (pst.executeUpdate() > 0) {
             flag = true;

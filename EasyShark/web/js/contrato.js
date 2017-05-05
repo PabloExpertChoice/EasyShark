@@ -4,6 +4,10 @@
  * and open the template in the editor.
  */
 
+function ver(id_empresa){
+    alert(id_empresa);
+}
+
 function swal_procces(mensaje, titulo, type) {
     swal({
         title: titulo || "Procesando",
@@ -48,19 +52,19 @@ function setTextToggle(id) {
             }
     )
 }
-function abrirModalContrato(id) {
+function abrirModalContrato(id, id_empresa) {
     if ($('#' + id).prop('checked') == false) {
         $('#' + id).prop('checked', true).change();
         $('#modal' + id).modal({backdrop: 'static'});
     } else {
-        updateContratacion(1379, id, 0);
+        updateContratacion(id_empresa, id, 0);
     }
 }
 
-function updateContratacion(_rut, _tipocontratacion, estadotemp) {
+function updateContratacion(_id_empresa, _tipocontratacion, estadotemp) {
     swal_procces();
 
-    var rut = _rut;
+    var id_empresa = _id_empresa;
     var tipocontratacion = 0;
     var estado = 0;
 
@@ -83,7 +87,7 @@ function updateContratacion(_rut, _tipocontratacion, estadotemp) {
         dataType: 'json',
         data: {
             accion: 'updateContratacion',
-            rut: rut,
+            id_empresa: id_empresa,
             id_tipocontratacion: tipocontratacion,
             estado: estado
         },
@@ -116,10 +120,11 @@ function setChecked(id, estado) {
         $('#' + id).prop('checked', false).change();
     }
 }
+
 function confirmarContrato(id) {
     swal_procces();
     $('#' + id).prop('checked', true).change();
-    updateContratacion(1379, id, 1);
+    updateContratacion(id_empresa, id, 1);
 }
 
 function get_File(id_file) {

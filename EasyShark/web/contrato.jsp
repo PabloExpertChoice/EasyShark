@@ -1,3 +1,12 @@
+<%@page import="soporte.D"%>
+<%
+    if (!D.isSesionActiva(request)) {
+        response.sendRedirect("cmd");
+        return;
+    }
+    int id_empresa = D.getUsuarioSesion(request).getSubsidiary().getId();
+
+%>
 <!DOCTYPE html>
 <!-- 
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
@@ -105,9 +114,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <div class="portlet-body">
                                         <div class="pull-right text-right">
                                             <div class="portlet">
-                                                <div class="checkbox" onclick="abrirModalContrato('chkSinacofi');">
+                                                <div class="checkbox" onclick="abrirModalContrato('chkSinacofi',<%= id_empresa%>);">
                                                     <label>
-                                                        <input id="chkSinacofi"  onclick ="updateContratacion(1379, 1)" name="chkSinacofi" type="checkbox" data-toggle="toggle">
+                                                        <input id="chkSinacofi" name="chkSinacofi" type="checkbox" data-toggle="toggle">
 
                                                     </label>
                                                 </div>
@@ -129,7 +138,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <div class="portlet-body">
                                         <div class="pull-right text-right">
                                             <div class="portlet">
-                                                <div class="checkbox" onclick="abrirModalContrato('chkEquifax');">
+                                                <div class="checkbox" onclick="abrirModalContrato('chkEquifax',<%= id_empresa%>);">
                                                     <label>
                                                         <input id="chkEquifax"  name="chkEquifax" type="checkbox" data-toggle="toggle">
                                                     </label>
@@ -152,7 +161,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <div class="portlet-body">
                                         <div class="pull-right text-right">
                                             <div class="portlet">
-                                                <div class="checkbox" onclick="abrirModalContrato('chkTransunion');">
+                                                <div class="checkbox" onclick="abrirModalContrato('chkTransunion',<%= id_empresa%>);">
                                                     <label>
                                                         <input id="chkTransunion"  name="chkTransunion" type="checkbox" data-toggle="toggle">
                                                     </label>
@@ -253,6 +262,9 @@ License: You must have a valid license purchased only from themeforest(the above
             <script> menuSelected("<%=request.getParameter("code")%>");</script>
         <script src="dist/js/sweetalert.min.js"></script>
         <script>
+
+                var id_empresa = '<%= id_empresa%>';
+               
                 $(function () {
                     swal_procces();
                     $.ajax({
@@ -261,7 +273,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         dataType: 'json',
                         data: {
                             accion: 'verContratacion',
-                            rut: 1379
+                            id_empresa: id_empresa
                         },
                         success: function (data) {
 
@@ -289,12 +301,13 @@ License: You must have a valid license purchased only from themeforest(the above
                             swal_unprocces();
                         }});
                 });
-                
-                
+
+
 
 
 
         </script>
+        <script src="js/contrato.js" type="text/javascript"></script>
 
     </body>
 

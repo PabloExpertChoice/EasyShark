@@ -42,11 +42,11 @@ public class Svl_Contratacion extends HttpServlet {
             switch (accion) {
 
                 case "verContratacion": {
-                    String rut = request.getParameter("rut");
+                    String id_empresa = request.getParameter("id_empresa");
                     BnContratacion bn = new BnContratacion();
                     ArrayList<Contratacion> list = null;
                     try {
-                        list = bn.getContrataciones(Integer.parseInt(rut));
+                        list = bn.getContrataciones(Integer.parseInt(id_empresa));
                     } catch (SQLException ex) {
                         Logger.getLogger(Svl_Contratacion.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -55,7 +55,7 @@ public class Svl_Contratacion extends HttpServlet {
                     break;
                 }
                 case "updateContratacion": {
-                    String rut = request.getParameter("rut");
+                    String id_empresa = request.getParameter("id_empresa");
                     String id_tipocontratacion = request.getParameter("id_tipocontratacion");
                     String estado = request.getParameter("estado");
                     
@@ -63,7 +63,7 @@ public class Svl_Contratacion extends HttpServlet {
                     ArrayList<Contratacion> list = null;
                     boolean flag;
                     try {
-                        flag = bn.updateContrataciones(Integer.parseInt(rut),Integer.parseInt(id_tipocontratacion),Integer.parseInt(estado));
+                        flag = bn.updateContrataciones(Integer.parseInt(id_empresa),Integer.parseInt(id_tipocontratacion),Integer.parseInt(estado));
                     } catch (SQLException ex) {
                          flag = false;
                     }
