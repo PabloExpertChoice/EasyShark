@@ -76,7 +76,7 @@ public class Svl_Informacion extends HttpServlet {
                             toPage("/dashboard.jsp", request, response);
                         } else {
                             request.setAttribute("msg", "No se encuentran datos");
-                            toPage("/cmd", request, response);
+                            toPage("/index.jsp", request, response);
                         }
                         break;
                     }

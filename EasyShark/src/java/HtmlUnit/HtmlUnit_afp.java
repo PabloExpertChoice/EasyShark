@@ -296,8 +296,8 @@ public class HtmlUnit_afp {
         Connection conn = null;
         try {
             conn = Conexion.getConexionEasy();
-            String sql = "INSERT INTO EASY.INFORMACION_PREVISIONAL (DOCUMENTO, CLIENTE_ID_CLIENTE)\n"
-                    + "VALUES(?, ?)";
+            String sql = "INSERT INTO easy.INFORMACION_PREVISIONAL (DOCUMENTO, FECHA_CONSULTA, CLIENTE_ID_CLIENTE)\n"
+                    + "VALUES(?, CURRENT_TIMESTAMP,?)";
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setString(1, this.basePdf);
             pst.setString(2, this.idCliente.toString());
@@ -314,7 +314,7 @@ public class HtmlUnit_afp {
         try {
             conn = Conexion.getConexionEasy();
             String sql = "SELECT ID_INFOPREVISIONAL, DOCUMENTO, FECHA_CONSULTA\n"
-                    + "FROM EASY.INFORMACION_PREVISIONAL "
+                    + "FROM easy.INFORMACION_PREVISIONAL "
                     + "WHERE CLIENTE_ID_CLIENTE = ? ";
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setString(1, this.idCliente.toString());

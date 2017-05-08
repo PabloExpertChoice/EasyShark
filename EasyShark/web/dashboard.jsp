@@ -12,8 +12,13 @@
     }
     int id_usuario = D.getUsuarioSesion(request).getId();
     Subsidiary sub = (Subsidiary) request.getAttribute("datos");
+    String nombre_completo = sub.getNombre();
+    if(sub.getRut()<50000000){
+        nombre_completo+= " "+sub.getApePaterno()+" "+sub.getApeMaterno();
+    }
+        
     int id_empresa = D.getUsuarioSesion(request).getSubsidiary().getId();
-    
+
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -406,7 +411,7 @@
                                         <img src="images/info_previsional-icon.png" style="width: 40px;" class="pull-right">
                                         <div class="number">
                                             <h3 class="font-green-sharp">
-                                                <span data-counter="counterup" data-value="0"></span>
+                                                <span data-counter="counterup" data-value="0" id="nombreAfp"></span>
                                                 <!--<small class="font-green-sharp">$</small>-->
                                             </h3>
                                             <div class="progress-info">
@@ -716,14 +721,14 @@
                 <script>
                                 var rut = '<%= sub.getRut()%>';
                                 var dv = '<%= sub.getDv()%>';
-                                var nomCompleto = '<%= sub.getNombre() + " " + sub.getApePaterno() + " " + sub.getApeMaterno()%>';
+                                var nomCompleto = '<%= nombre_completo%>';
                                 var nombre = '<%= sub.getNombre()%>';
                                 var apePaterno = '<%= sub.getApePaterno()%>';
                                 var apeMaterno = '<%= sub.getApeMaterno()%>';
                                 var id_empresa = '<%= id_empresa%>';
                                 var id_usuario = '<%= id_usuario%>';
-                                
-                                
+
+
                                 $(document).ready(function () {
                                     var arrayPJUD;
                                     var arrayTemp;
@@ -737,7 +742,7 @@
                                     buscarDatosOfac(nombre, apePaterno, apeMaterno);
                                     getScore(rut, dv);
                                     buscarActividadComercial(rut, dv);
-                                    //                                    cargaIframe(rut, dv, nombre, apePaterno, apeMaterno, 0);
+                                    cargaIframe(rut, dv, nombre, apePaterno, apeMaterno, rut);
                                     validarQuiebra(rut, dv);
                                     tblPjud = $("#tblPJUD").DataTable({
                                         language: {
@@ -1016,22 +1021,25 @@
 
                                 function verModalBL(opcion) {
                                     swal_procces();
-                                    switch(opcion){
-                                        case 1: {
-                                                getDatosBLrut(rut);
-                                                break;
+                                    switch (opcion) {
+                                        case 1:
+                                        {
+                                            getDatosBLrut(rut);
+                                            break;
                                         }
-                                        case 2: {
-                                                getDatosBLempresa(rut, id_empresa);
-                                                break;
+                                        case 2:
+                                        {
+                                            getDatosBLempresa(rut, id_empresa);
+                                            break;
                                         }
-                                        case 3: {
-                                                getDatosBLusuario(rut, id_usuario);
-                                                break;
+                                        case 3:
+                                        {
+                                            getDatosBLusuario(rut, id_usuario);
+                                            break;
                                         }
                                     }
-                                    
-                                    
+
+
                                 }
                                 /**
                                  * 

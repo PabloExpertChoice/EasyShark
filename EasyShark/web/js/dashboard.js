@@ -214,6 +214,7 @@ function verModalAC() {
 function cargaIframe(_rut, _dv, _nombre, _apePaterno, _apeMaterno, _idCliente) {
     $('#modalAfp .modal-dialog .modal-content .modal-header .modal-title').html(_nombre + ' ' + _apePaterno + ' ' + _apeMaterno);
     $('#modalAfp .modal-dialog .modal-content .modal-footer .btn-primary').show();
+    swal_procces();
     if (!iframeCargado) {
         $.ajax({
             url: 'Svl_Cliente',
@@ -245,6 +246,10 @@ function cargaIframe(_rut, _dv, _nombre, _apePaterno, _apeMaterno, _idCliente) {
 
                         $('#modalAfp .modal-dialog .modal-content .modal-body').html(objbuilder);
                         $('#modalAfp .modal-dialog .modal-content .modal-footer .btn-primary').hide();
+
+                        var nro = data.datos.afp;
+                        console.log(nro);
+                        $('#nombreAfp').attr('data-value', data.datos.afp);
                     } else {
                         var form = '<form role="form">' +
                                 '    <div class="row">' +
@@ -326,6 +331,7 @@ function cargaIframe(_rut, _dv, _nombre, _apePaterno, _apeMaterno, _idCliente) {
             document.getElementById('imgimg').appendChild(img);
         }
     }
+    swal_unprocces();
 }
 
 
