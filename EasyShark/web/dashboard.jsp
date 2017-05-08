@@ -463,6 +463,9 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!--informacion de Ofac-->
+                            
                             <div class="col-md-4 col-sm-12 col-xs-12" onclick="return verModalOfac()">
                                 <div class="dashboard-stat2 bordered" id="boxOfac">
                                     <div class="display">
@@ -522,6 +525,7 @@
                                                                     </div>-->
                                 </div>
                             </div>
+                            <!--ac-->
                             <div class="col-md-4 col-sm-12 col-xs-12" onclick="verModalAC()">
                                 <div class="dashboard-stat2 bordered" id="boxActividadComercial">
                                     <div class="display">
