@@ -3,11 +3,11 @@
     Created on : 13-03-2017, 15:22:02
     Author     : ignacio
 --%>
+<%@page import="soporte.D"%>
 <%@page import="cl.expertchoice.clases.Usuario"%>
 <%@page import="org.json.JSONObject"%>
 <%
-    Usuario user = (Usuario) session.getAttribute("sesion");
-    if (user == null) {
+    if (!D.isSesionActiva(request)) {
         response.sendRedirect("cmd");
         return;
     }

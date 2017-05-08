@@ -659,6 +659,9 @@
 
                 <!-- BEGIN CORE PLUGINS -->
                 <!--<script src="assets/global/plugins/jquery.min.js" type="text/javascript"></script>-->
+                <script src="js/swall.js"></script>   
+                <script src="dist/js/sweetalert.min.js"></script>
+                <script > swal_procces();</script>
                 <script src="js/jquery-2.1.3.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
@@ -1223,6 +1226,7 @@
             <script src="plugins/jsPlumb/src/base-library-adapter.js"></script>
             <script src="plugins/jsPlumb/src/dom.jsPlumb.js"></script>  
             <script src="js/politicas.js"></script>            
-            <script src="js/swall.js"></script>            
+            <script src="js/swall.js"></script>  
+            <script > swal_unprocces();</script>
     </body>
 </html>
