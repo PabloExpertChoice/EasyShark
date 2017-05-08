@@ -279,7 +279,6 @@ License: You must have a valid license purchased only from themeforest(the above
 
                             for (var obj in data) {
                                 var temp = data[obj]['Id_tipocontratacion'];
-                                console.log('TipoContratacion: ' + data[obj]['Id_tipocontratacion'] + "  Estado:" + data[obj]['Estado']);
                                 switch (temp) {
                                     case 1:
                                     {

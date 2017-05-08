@@ -29,9 +29,9 @@ public class Conexion {
         Connection conexion = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            String servidor = "jdbc:mysql://test.ecloudapp.cl/easy";
+            String servidor = "jdbc:mysql://192.168.100.2/easy";
             String usuario = "desarrollo";
-            String password = "+2017desarrollo";
+            String password = "clavetemporal";
             conexion = DriverManager.getConnection(servidor, usuario, password);
             conexion.setAutoCommit(true);
         } catch (ClassNotFoundException ex) {

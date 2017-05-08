@@ -166,7 +166,7 @@ public class Svl_Usuarios extends HttpServlet {
                         int idusu = Integer.parseInt(request.getParameter("id"));
                         BnUsuario bnUsu = new BnUsuario();
                         //bloqueo el usuario
-                        if (bnUsu.EsAdmin(idusu)==false) {
+                        if (bnUsu.EsAdmin(idusu) == false) {
                             bnUsu.Bloquear(idusu);
                             json.addProperty("estado", D.EST_USUARIO_COMUN_OK);
                         } else {
@@ -190,20 +190,19 @@ public class Svl_Usuarios extends HttpServlet {
                         usuarioEditado.setApePaterno(request.getParameter("apellidoPaterno"));
                         usuarioEditado.setApeMaterno(request.getParameter("apellidoMaterno"));
                         usuarioEditado.setEmail(request.getParameter("email"));
-                        
+
                         //DE MOMENTO NO SE EDITA ESTADO
-                        
                         //verificar si el correo es el mismo y mantenerlo
-                        if(usuActual.getEmail().equalsIgnoreCase(usuarioEditado.getEmail())){
+                        if (usuActual.getEmail().equalsIgnoreCase(usuarioEditado.getEmail())) {
                             //edita
                             bnUsu.editarUsuario(usuarioEditado);
                             json.addProperty("estado", D.EST_USUARIO_COMUN_OK);
                             json.addProperty("descripcion", "Usuario Agregado");
-                        //si no es el mismo verifica si ya esta ingresado
-                        }else if (bnUsu.buscarPorCorreo(usuarioEditado.getEmail()) != null) {
+                            //si no es el mismo verifica si ya esta ingresado
+                        } else if (bnUsu.buscarPorCorreo(usuarioEditado.getEmail()) != null) {
                             json.addProperty("estado", D.EST_NORESULTADO);
                             json.addProperty("descripcion", "El correo <b>" + usuarioEditado.getEmail() + "</b> ya se encuentra registrado.");
-                        //si no es el mismo y no esta ingresado edita
+                            //si no es el mismo y no esta ingresado edita
                         } else {
                             bnUsu.editarUsuario(usuarioEditado);
                             json.addProperty("estado", D.EST_USUARIO_COMUN_OK);
@@ -219,7 +218,7 @@ public class Svl_Usuarios extends HttpServlet {
                         int idusu = Integer.parseInt(request.getParameter("id"));
                         BnUsuario bnUsu = new BnUsuario();
                         //desbloqueo el usuario
-                        if (bnUsu.EsAdmin(idusu)==false) {
+                        if (bnUsu.EsAdmin(idusu) == false) {
                             bnUsu.desBloquear(idusu);
                             json.addProperty("estado", D.EST_USUARIO_COMUN_OK);
                         } else {
@@ -232,7 +231,6 @@ public class Svl_Usuarios extends HttpServlet {
                     //codigo para usuario comun
                     case "crear-usuario-comun": {
                         Usuario usu = new Usuario();
-
                         //parametros usuario comun
                         String nombre = request.getParameter("nombre");
                         String apellidoPaterno = request.getParameter("apellidoPaterno");

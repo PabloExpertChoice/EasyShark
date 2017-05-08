@@ -43,6 +43,41 @@
         <link href="assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" /> 
+        <link rel="stylesheet" type="text/css" href="dist/css/sweetalert.css">
+
+        <style>
+            html {
+                position: relative;
+                min-height: 100%;
+            }
+            body {
+                /* Margin bottom by footer height */
+                margin-bottom: 60px;
+            }
+            .footer {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                height: 30px;
+                background-color: #f5f5f5;
+            }
+
+            /* centered columns styles */
+            .row-centered {
+                text-align:center;
+            }
+            .col-centered {
+                display:inline-block;
+                float:none;
+                width: 100%;
+                /* reset the text-align */
+                text-align:left;
+                /* inline-block space fix */
+                margin-right:-4px;
+            }
+
+        </style>
+
     </head>
     <!-- END HEAD -->
 
@@ -94,126 +129,136 @@
                                         </div>
                                     </div>
                                     <div class="portlet-body">
-                                        <div style="margin-bottom: 0.1cm;">
-                                            <a id="ing_usu" class="btn btn-default next" onclick="dlgAgregarPerfil();" style="background: #3498DB;color:#FFF"><i class="fa fa-plus" aria-hidden="true"></i> Nuevo perfil</a><br>
+                                    <%-- Boton de crear perfil --%>
+                                    <div style="margin-bottom: 0.1cm;">
+                                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#ModalPerfil">Nuevo perfil</button>
+                                    </div>
+                                    <div id="tblPerfiles_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table id="ListaDePerfiles" class="table table-bordered table-hover dataTable no-footer" id="tblPerfiles" style="width: 100%; text-align: center;" role="grid" aria-describedby="tblPerfiles_info">
+                                                    <thead>
+                                                        <tr>
+                                                            <th >Nombre</th>
+                                                            <th >Opción</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
                                         </div>
-                                        <div id="tblPerfiles_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer"><div class="row"><div class="col-sm-6"><div class="dataTables_length" id="tblPerfiles_length"><label>Mostrar <select name="tblPerfiles_length" aria-controls="tblPerfiles" class="form-control input-sm"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> registros</label></div></div><div class="col-sm-6"><div id="tblPerfiles_filter" class="dataTables_filter"><label>Buscar:<input class="form-control input-sm" placeholder="" aria-controls="tblPerfiles" type="search"></label></div></div></div><div class="row"><div class="col-sm-12"><table class="table table-bordered table-hover dataTable no-footer" id="tblPerfiles" style="width: 100%; text-align: center;" role="grid" aria-describedby="tblPerfiles_info">
-                                                        <thead>
-                                                            <tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="tblPerfiles" rowspan="1" colspan="1" style="width: 797px;" aria-sort="ascending" aria-label="Nombre: Activar para ordenar la columna de manera descendente">Nombre</th><th class="sorting" tabindex="0" aria-controls="tblPerfiles" rowspan="1" colspan="1" style="width: 401px;" aria-label=": Activar para ordenar la columna de manera ascendente"></th></tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr role="row" class="odd"><td class="sorting_1">ADMINISTRADOR</td><td><button class="btn btn-sm btn-default icono" title="Menu" onclick="dlgMenu(2)"><i class="fa fa-list"></i></button> <button class="btn btn-sm btn-default icono" title="Menu" onclick="dlgEliminarPerfil(this)"><i class="fa fa-times-circle"></i></button></td></tr><tr role="row" class="even"><td class="sorting_1">SUPER ADMINISTRADOR</td><td><button class="btn btn-sm btn-default icono" title="Menu" onclick="dlgMenu(1)"><i class="fa fa-list"></i></button> <button class="btn btn-sm btn-default icono" title="Menu" onclick="dlgEliminarPerfil(this)"><i class="fa fa-times-circle"></i></button></td></tr><tr role="row" class="odd"><td class="sorting_1">VIZUALIZADOR</td><td><button class="btn btn-sm btn-default icono" title="Menu" onclick="dlgMenu(3)"><i class="fa fa-list"></i></button> <button class="btn btn-sm btn-default icono" title="Menu" onclick="dlgEliminarPerfil(this)"><i class="fa fa-times-circle"></i></button></td></tr></tbody>
-                                                    </table></div></div><div class="row"><div class="col-sm-5"><div class="dataTables_info" id="tblPerfiles_info" role="status" aria-live="polite">Mostrando registros del 1 al 3 de un total de 3 registros</div></div><div class="col-sm-7"><div class="dataTables_paginate paging_simple_numbers" id="tblPerfiles_paginate"><ul class="pagination"><li class="paginate_button previous disabled" id="tblPerfiles_previous"><a href="#" aria-controls="tblPerfiles" data-dt-idx="0" tabindex="0">Anterior</a></li><li class="paginate_button active"><a href="#" aria-controls="tblPerfiles" data-dt-idx="1" tabindex="0">1</a></li><li class="paginate_button next disabled" id="tblPerfiles_next"><a href="#" aria-controls="tblPerfiles" data-dt-idx="2" tabindex="0">Siguiente</a></li></ul></div></div></div></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- END CONTENT BODY -->
                     </div>
-                    <!-- END CONTENT -->
+                    <!-- END CONTENT BODY -->
                 </div>
-                <!-- END CONTAINER -->
-
-                <!-- BEGIN FOOTER -->
-                <div class="page-footer">
-                <jsp:include page="seccion/footer.jsp"></jsp:include>
+                <!-- END CONTENT -->
             </div>
-            <!-- END FOOTER -->
+            <!-- END CONTAINER -->
+
+            <%-- Modal de recursos --%>
+            <div id="ModalRecursos" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Recursos</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="row row-centered" style="padding: 10px;">
+                                <div class="col-md-3 col-xs-12 col-centered" style="margin: 0 auto;">
+                                    <table id="ListaRecursos" class="table table-bordered table-hover dataTable no-footer" id="tblPerfiles" style="width: 100%; text-align: center;" role="grid" aria-describedby="tblPerfiles_info">
+                                        <thead>
+                                            <tr>
+                                                <th >ok</th>
+                                                <th >Nombre</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <div style="margin-bottom: 0.1cm;">
+                                        <button type="button" class="btn btn-info btn-lg" id="btnAsignar" onclick="Asignar()" >Asignar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
 
 
-            <!-- BEGIN CORE PLUGINS -->
-            <script src="assets/global/plugins/jquery.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
-            <!-- END CORE PLUGINS -->
-            <!-- BEGIN PAGE LEVEL PLUGINS -->
-            <script src="assets/global/plugins/moment.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/morris/morris.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/morris/raphael-min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/counterup/jquery.waypoints.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/amcharts/amcharts/amcharts.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/amcharts/amcharts/serial.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/amcharts/amcharts/pie.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/amcharts/amcharts/radar.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/amcharts/amcharts/themes/light.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/amcharts/amcharts/themes/patterns.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/amcharts/amcharts/themes/chalk.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/amcharts/ammap/ammap.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/amcharts/ammap/maps/js/worldLow.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/amcharts/amstockcharts/amstock.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/horizontal-timeline/horizontal-timeline.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/flot/jquery.flot.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/flot/jquery.flot.resize.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/flot/jquery.flot.categories.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/jqvmap/jqvmap/jquery.vmap.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.russia.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.world.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.europe.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.germany.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.usa.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/jqvmap/jqvmap/data/jquery.vmap.sampledata.js" type="text/javascript"></script>
-            <!-- END PAGE LEVEL PLUGINS -->
-            <!-- BEGIN THEME GLOBAL SCRIPTS -->
-            <script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
-            <!-- END THEME GLOBAL SCRIPTS -->
-            <!-- BEGIN PAGE LEVEL SCRIPTS -->
-            <script src="assets/pages/scripts/dashboard.min.js" type="text/javascript"></script>
-            <!-- END PAGE LEVEL SCRIPTS -->
-            <!-- BEGIN THEME LAYOUT SCRIPTS -->
-            <script src="assets/layouts/layout4/scripts/layout.min.js" type="text/javascript"></script>
-            <script src="assets/layouts/layout4/scripts/demo.min.js" type="text/javascript"></script>
-            <script src="assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
-            <script src="assets/layouts/global/scripts/quick-nav.min.js" type="text/javascript"></script>
-            <!-- END THEME LAYOUT SCRIPTS -->
-            <!-- Google Code for Universal Analytics -->
-            <script>
-                                                                (function (i, s, o, g, r, a, m) {
-                                                                    i['GoogleAnalyticsObject'] = r;
-                                                                    i[r] = i[r] || function () {
-                                                                        (i[r].q = i[r].q || []).push(arguments)
-                                                                    }, i[r].l = 1 * new Date();
-                                                                    a = s.createElement(o),
-                                                                            m = s.getElementsByTagName(o)[0];
-                                                                    a.async = 1;
-                                                                    a.src = g;
-                                                                    m.parentNode.insertBefore(a, m)
-                                                                })(window, document, 'script', '../../../../../www.google-analytics.com/analytics.js', 'ga');
-                                                                ga('create', 'UA-37564768-1', 'auto');
-                                                                ga('send', 'pageview');
-            </script>
-            <!-- End -->
 
-            <!-- Google Tag Manager -->
-            <noscript><iframe src="http://www.googletagmanager.com/ns.html?id=GTM-W276BJ"
-                              height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-            <script>(function (w, d, s, l, i) {
-                    w[l] = w[l] || [];
-                    w[l].push({'gtm.start':
-                                new Date().getTime(), event: 'gtm.js'});
-                    var f = d.getElementsByTagName(s)[0],
-                            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-                    j.async = true;
-                    j.src =
-                            '../../../../../www.googletagmanager.com/gtm5445.html?id=' + i + dl;
-                    f.parentNode.insertBefore(j, f);
-                })(window, document, 'script', 'dataLayer', 'GTM-W276BJ');</script>
-            <!-- End -->
-            
-            <!-- Codigo A.M.-->
-            <script src="js/funciones.js"></script>
-            <script src="js/sidebar.js"></script>
-            <script> menuSelected("<%=request.getParameter("code")%>");  </script>
+
+            <!-- BEGIN FOOTER -->
+            <div class="page-footer">
+                <jsp:include page="seccion/footer.jsp"></jsp:include>
+                </div>
+                <!-- END FOOTER -->
+
+
+                <!-- BEGIN CORE PLUGINS -->
+                <script src="assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+                <!-- END CORE PLUGINS -->
+                <!-- BEGIN PAGE LEVEL PLUGINS -->
+                <script src="assets/global/plugins/moment.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/morris/morris.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/morris/raphael-min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/counterup/jquery.waypoints.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/amcharts/amcharts/amcharts.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/amcharts/amcharts/serial.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/amcharts/amcharts/pie.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/amcharts/amcharts/radar.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/amcharts/amcharts/themes/light.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/amcharts/amcharts/themes/patterns.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/amcharts/amcharts/themes/chalk.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/amcharts/ammap/ammap.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/amcharts/ammap/maps/js/worldLow.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/amcharts/amstockcharts/amstock.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/horizontal-timeline/horizontal-timeline.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/flot/jquery.flot.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/flot/jquery.flot.resize.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/flot/jquery.flot.categories.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/jqvmap/jqvmap/jquery.vmap.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.russia.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.world.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.europe.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.germany.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.usa.js" type="text/javascript"></script>
+                <script src="assets/global/plugins/jqvmap/jqvmap/data/jquery.vmap.sampledata.js" type="text/javascript"></script>
+                <!-- END PAGE LEVEL PLUGINS -->
+                <!-- BEGIN THEME GLOBAL SCRIPTS -->
+                <script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
+                <!-- END THEME GLOBAL SCRIPTS -->
+                <!-- BEGIN PAGE LEVEL SCRIPTS -->
+                <script src="assets/pages/scripts/dashboard.min.js" type="text/javascript"></script>
+                <!-- END PAGE LEVEL SCRIPTS -->
+                <!-- BEGIN THEME LAYOUT SCRIPTS -->
+                <script src="assets/layouts/layout4/scripts/layout.min.js" type="text/javascript"></script>
+                <script src="assets/layouts/layout4/scripts/demo.min.js" type="text/javascript"></script>
+                <script src="assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
+                <script src="assets/layouts/global/scripts/quick-nav.min.js" type="text/javascript"></script>
+
+                <!-- Codigo A.M.-->
+                <script src="js/funciones.js"></script>
+                <script src="js/sidebar.js"></script>
+                <script src="DataTables/datatables.min.js" type="text/javascript"></script>
+            <script src="dist/js/sweetalert.min.js"></script>
+                <script src="js/registro_ws.js"></script>
+                <script> menuSelected("<%=request.getParameter("code")%>");</script>
     </body>
-
-
-
-    <!-- Mirrored from keenthemes.com/preview/metronic/theme/admin_4/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 13 Mar 2017 15:44:48 GMT -->
 </html>

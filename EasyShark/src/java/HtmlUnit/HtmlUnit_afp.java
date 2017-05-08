@@ -308,6 +308,7 @@ public class HtmlUnit_afp {
         }
     }
 
+    //busca en la bbdd
     public boolean buscarInformacion() {
         Connection conn = null;
         boolean flag = false;

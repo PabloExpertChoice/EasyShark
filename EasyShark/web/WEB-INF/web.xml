@@ -52,6 +52,14 @@
         <servlet-name>Svl_Usuarios</servlet-name>
         <servlet-class>cl.expertchoice.svl.Svl_Usuarios</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Svl_Perfiles</servlet-name>
+        <servlet-class>cl.expertchoice.svl.Svl_Perfiles</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Svl_Recursos</servlet-name>
+        <servlet-class>cl.expertchoice.svl.Svl_Recursos</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Svl_BlackList</servlet-name>
         <url-pattern>/Svl_BlackList</url-pattern>
@@ -106,6 +114,14 @@
     <servlet-mapping>
         <servlet-name>Svl_Usuarios</servlet-name>
         <url-pattern>/Svl_Usuarios</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Svl_Perfiles</servlet-name>
+        <url-pattern>/Svl_Perfiles</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Svl_Recursos</servlet-name>
+        <url-pattern>/Svl_Recursos</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

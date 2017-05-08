@@ -230,6 +230,8 @@ $(function () {
             });
         }
     });
+
+
 });
 
 
@@ -246,4 +248,148 @@ function validarContrato(check) {
     }
 
 }
+var IdPerfil;
+
+$(function () {
+    //cargar todos los Perfiles
+    $.ajax({
+        url: 'Svl_Perfiles',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            accion: 'ListarPerfiles'
+        },
+        success: function (data) {
+            $('#ListaDePerfiles').DataTable().destroy();
+            $('#ListaDePerfiles').DataTable({
+                "data": data,
+                "bSort": true,
+                "columns": [
+                    {data: 'nombre', class: 'txt-center'},
+                    {data: 'id', "render": function (data, type, row) {
+                            return '<button class="btn btn-sm btn-default icono" title="Menu" onclick="CargarRecursos(' + data + ')"><i class="fa fa-list"></i></button>'
+                                    + '<button class="btn btn-sm btn-default icono" title="Menu" onclick="dlgEliminarPerfil(this)"><i class="fa fa-times-circle"></i></button>';
+                        }
+                    }
+                ]
+            });
+        }
+    });
+
+});
+
+function CargarRecursos(id) {
+    //capturo la id del perfil
+    IdPerfil = id;
+    //listo todos los recursos
+    $.ajax({
+        url: 'Svl_Recursos',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            accion: 'ListarRecursos'
+        },
+        success: function (data) {
+            $('#ListaRecursos').DataTable().destroy();
+            $('#ListaRecursos').DataTable({
+                "data": data,
+                "bSort": true,
+                "columns": [
+                    {data: 'id', "render": function (data, type, row) {
+                            return '<input type="checkbox" id="' + data + '" value="' + data + '">';
+                        }
+                    },
+                    {data: 'titulo', class: 'txt-center'}
+                ]
+            });
+            marcarRecursos(id);
+        }
+    });
+
+}
+function marcarRecursos(id) {
+    $.ajax({
+        url: 'Svl_Recursos',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            accion: 'ListarRecursosDelPerfil',
+            idPerfil: id
+        },
+        success: function (data) {
+            var ListaPerfilesYRecursos = data;
+            for (var i = 0; i < ListaPerfilesYRecursos.length; i++) {
+                $('#' + ListaPerfilesYRecursos[i].idRecurso).prop('checked', true).change();
+            }
+        }
+    });
+    //muestro el modal
+    $('#ModalRecursos').modal({'backdrop': 'static'});
+}
+
+//codigo Asignar Recursos
+function Asignar() {
+    var arrPermisos = [];
+    $('#ListaRecursos tbody tr').each(function () {
+        var input = $(this).find('td:eq(0)').find('input:eq(0)');
+        if ($(input).is(':checked')) {
+            var id = $(input).attr('id');
+            arrPermisos.push(id);
+        }
+    });
+
+    swal({
+        title: "Esta seguro?",
+        text: "",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Asignar",
+        closeOnConfirm: false
+    }, function (isConfirm) {
+        if (!isConfirm)
+            return;
+
+        $.ajax({
+            url: 'Svl_Recursos',
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                swal("Done!", "It was succesfully deleted!", "success");
+                $('#ModalRecursos').modal('toggle');
+            },
+            data: {
+                accion: 'AsignarRecursosDelPerfil',
+                idPerfil: IdPerfil,
+                perfiles: JSON.stringify(arrPermisos)
+            },
+            success: function (data) {
+                swal("Done!", "It was succesfully deleted!", "success");
+            }
+        });
+
+    });
+
+//    $.ajax({
+//        url: 'Svl_Recursos',
+//        type: 'POST',
+//        dataType: 'json',
+//        beforeSend: function (xhr) {
+//            swal_procces();
+//
+//            $('#ModalRecursos').modal('toggle');
+//        },
+//        data: {
+//            accion: 'AsignarRecursosDelPerfil',
+//            idPerfil: IdPerfil,
+//            perfiles: JSON.stringify(arrPermisos)
+//        },
+//        success: function (data) {
+//            //hacer una ventana de respuesta
+//            swal_unprocces();
+//        }
+//    });
+}
+
+
 
